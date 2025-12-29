@@ -13,7 +13,6 @@ class cartcard extends StatefulWidget {
   final VoidCallback onIncrease;
   final VoidCallback onDecrease;
 
-
   const cartcard({
     super.key,
     required this.name,
@@ -27,7 +26,6 @@ class cartcard extends StatefulWidget {
     required this.onRemove,
     required this.onIncrease,
     required this.onDecrease,
-
   });
 
   @override
@@ -35,37 +33,36 @@ class cartcard extends StatefulWidget {
 }
 
 class _cartcardState extends State<cartcard> {
-
-  int prod_count = 1;
-
   @override
   Widget build(BuildContext context) {
-
+    final size = MediaQuery.of(context).size;
+    final w = size.width;
+    final h = size.height;
 
     return Container(
-      margin: const EdgeInsets.all(12),
-      height: 200,
-      padding: const EdgeInsets.all(10),
+      margin: EdgeInsets.all(w * 0.005),
+      height: h * 0.23,
+      padding: EdgeInsets.all(w * 0.03),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(w * 0.04),
       ),
       child: Stack(
         children: [
           Container(
-            height: 220,
             decoration: BoxDecoration(
               color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(w * 0.04),
             ),
-
             child: Row(
               children: [
+                // IMAGE
                 Container(
-                  height: 220,
-                  width: 150,
+                  width: w * 0.35,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
+                    borderRadius: BorderRadius.horizontal(
+                      left: Radius.circular(w * 0.04),
+                    ),
                     image: DecorationImage(
                       image: AssetImage('assets/images/${widget.image}'),
                       fit: BoxFit.cover,
@@ -73,129 +70,131 @@ class _cartcardState extends State<cartcard> {
                   ),
                 ),
 
-                const SizedBox(width: 20),
+                SizedBox(width: w * 0.04),
 
-                Column(
-
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10,),
-                    Text(widget.brand,
-                        style: const TextStyle(
-                            fontSize: 16, color: Colors.grey)),
-                    Text(widget.name,
-                        style: const TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold)),
-                    Row(
+                // DETAILS
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: h * 0.015),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text(
+                          widget.brand,
+                          style: TextStyle(
+                              fontSize: w * 0.04, color: Colors.grey),
+                        ),
+                        SizedBox(height: h * 0.005),
+                        Text(
+                          widget.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: h * 0.01),
+
+                        // COLOR & SIZE
                         Row(
                           children: [
-                            Text("color: ",
-                                style: const TextStyle(
-                                    fontSize: 17,
+                            Text("Color: ",
+                                style: TextStyle(
+                                    fontSize: w * 0.04,
                                     color: Colors.grey)),
                             Text(widget.color,
-                                style: const TextStyle(
-                                    fontSize: 17,
-                                    color: Colors.black)),
-                          ],
-                        ),
-                        SizedBox(width: 20,),
-                        Row(
-                          children: [
-                            Text("color:",
-                                style: const TextStyle(
-                                    fontSize: 17,
+                                style:
+                                TextStyle(fontSize: w * 0.04)),
+                            SizedBox(width: w * 0.04),
+                            Text("Size: ",
+                                style: TextStyle(
+                                    fontSize: w * 0.04,
                                     color: Colors.grey)),
                             Text(widget.size,
-                                style: const TextStyle(
-                                    fontSize: 17,
-                                    color: Colors.black)),
+                                style:
+                                TextStyle(fontSize: w * 0.04)),
+                          ],
+                        ),
+
+                        SizedBox(height: h * 0.015),
+
+                        // QUANTITY
+                        Row(
+                          children: [
+                            _qtyButton(
+                              icon: Icons.remove,
+                              onTap: widget.onDecrease,
+                              size: w/1.3,
+                            ),
+                            SizedBox(width: w * 0.04),
+                            Text(
+                              widget.quantity.toString(),
+                              style: TextStyle(
+                                  fontSize: w * 0.065,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(width: w * 0.04),
+                            _qtyButton(
+                              icon: Icons.add,
+                              onTap: widget.onIncrease,
+                              size: w/1.3,
+                            ),
                           ],
                         ),
                       ],
                     ),
-                    SizedBox(height: 10,),
-                    Row(
-                      children: [
-                        Material(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(40),
-                          elevation: 3, // 👈 floating card effect
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(20),
-                            onTap: widget.onDecrease,
-
-
-                            child:  Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Icon(Icons.remove, color: Colors.grey,size: 30,),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 20,),
-                        Text(widget.quantity.toString(),
-                            style: const TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black)
-                        ),
-                        SizedBox(width: 20,),
-
-
-                        Material(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(40),
-                          elevation: 3, // 👈 floating card effect
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(20),
-                            onTap:widget.onIncrease,
-                            child: const Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Icon(Icons.add, color: Colors.grey,size: 30,),
-                            ),
-                          ),
-                        ),
-
-
-                      ],
-                    ),
-
-
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
 
+          // PRICE
           Positioned(
-            bottom: 30,
-            right: 25,
-            child: Text("\$${widget.price * widget.quantity}",
-              style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black)
+            bottom: h * 0.035,
+            right: w * 0.05,
+            child: Text(
+              "\$${widget.price * widget.quantity}",
+              style: TextStyle(
+                  fontSize: w * 0.07,
+                  fontWeight: FontWeight.bold),
             ),
           ),
 
+          // REMOVE
           Positioned(
-            top: 0,
-            right: 5,
+            top: h * 0.005,
+            right: w * 0.02,
             child: IconButton(
-              onPressed:widget.onRemove,
-                icon: Icon(Icons.close_outlined,
-                size: 40,
-                color: Colors.grey[600],),
-
-            ) ,
+              onPressed: widget.onRemove,
+              icon: Icon(
+                Icons.close_outlined,
+                size: w * 0.07,
+                color: Colors.grey[600],
+              ),
+            ),
           ),
-
-
-
-
-
         ],
+      ),
+    );
+  }
+
+  Widget _qtyButton({
+    required IconData icon,
+    required VoidCallback onTap,
+    required double size,
+  }) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(size * 0.1),
+      elevation: 3,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(size * 0.1),
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.all(size * 0.025),
+          child: Icon(icon, size: size * 0.07, color: Colors.grey),
+        ),
       ),
     );
   }
