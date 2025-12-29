@@ -1,6 +1,7 @@
 import 'package:e_com/pages/cart.dart';
 import 'package:e_com/pages/favorite.dart';
 import 'package:e_com/pages/main2.dart';
+import 'package:e_com/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:e_com/pages/home.dart';
 
@@ -11,39 +12,83 @@ class MainShell extends StatefulWidget {
   State<MainShell> createState() => _MainShellState();
 }
 
-class _MainShellState extends State<MainShell> {
+class _MainShellState extends State<MainShell>
+    with WidgetsBindingObserver {
+
   int _currentIndex = 0;
+  DateTime? _lastBackPress;
 
   void changetab(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    setState(() => _currentIndex = index);
   }
 
-  final List<String> _routes = [
-    '/home',
-    '/cart',
-    '/bag',
-    '/favorite',
-    '/profile',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Prevent black screen when app is resumed
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      setState(() => _currentIndex = 0);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        body: Navigator(
-          onGenerateRoute: (settings) {
-            return MaterialPageRoute(
-              builder: (_) => _getPage(_routes[_currentIndex]),
-            );
-          },
-        ),
+    return PopScope(
+      canPop: false, // we fully control back behavior
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
 
+        // 🔹 If not on Home → go Home
+        if (_currentIndex != 0) {
+          setState(() => _currentIndex = 0);
+          return;
+        }
+
+        // 🔹 Double back to exit
+        final now = DateTime.now();
+        if (_lastBackPress == null ||
+            now.difference(_lastBackPress!) > const Duration(seconds: 2)) {
+          _lastBackPress = now;
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Press back again to exit"),
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return;
+        }
+
+        // 🔹 Exit app
+        Navigator.of(context).maybePop();
+      },
+      child: Scaffold(
+        body: IndexedStack(
+          index: _currentIndex,
+          children: [
+            home(onViewAll: () => changetab(2)),
+            const cart(),
+            const main2(),
+            const Favorite(),
+            const profile(),
+          ],
+        ),
         bottomNavigationBar: SizedBox(
           height: 100,
+
           child: BottomNavigationBar(
+            elevation: 4,
             backgroundColor: Colors.white,
             currentIndex: _currentIndex,
             onTap: (index) {
@@ -78,28 +123,5 @@ class _MainShellState extends State<MainShell> {
         ),
       ),
     );
-  }
-
-  Widget _getPage(String route) {
-    switch (route) {
-      case '/home':
-        return home(
-          onViewAll: () => changetab(2), // 👈 switch to Bag tab
-        );
-
-      case '/bag':
-        return const main2();
-
-      case '/cart':
-        return cart();
-
-      case '/favorite':
-        return Favorite();
-
-      default:
-        return home(
-          onViewAll: () => changetab(2),
-        );
-    }
   }
 }

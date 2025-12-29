@@ -11,29 +11,38 @@ class cart extends StatefulWidget {
 }
 
 class _cartState extends State<cart> {
-  int getTotalAmount() {
-    int total = 0;
-    for (final item in cartList) {
-      final qty = item.quantity;
-      total += item.price * qty;
-    }
-    return total;
+
+
+
+  int getTotalAmount(List<CartItem> cartList) {
+    return cartList.fold(
+      0,
+          (sum, item) => sum + (item.price * item.quantity),
+    );
   }
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
       backgroundColor: Colors.white,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        toolbarHeight: 120,
+        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+        toolbarHeight: screenHeight * 0.15,
         elevation: 0,
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         title: Padding(
-          padding: const EdgeInsets.only(left: 16, top: 12),
+          padding: EdgeInsets.only(
+            left: screenWidth * 0.04,
+            top: screenHeight * 0.015,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -45,8 +54,7 @@ class _cartState extends State<cart> {
                   color: Colors.black,
                   size: 30,
                 ),
-                onPressed: () {}
-
+                onPressed: () {},
               ),
               const SizedBox(height: 10),
               const Text(
@@ -62,98 +70,98 @@ class _cartState extends State<cart> {
           ),
         ),
       ),
+
       body: SingleChildScrollView(
-        child: Column(
+    child: ValueListenableBuilder<List<CartItem>>(
+      valueListenable: cartListNotifier,
+      builder: (context, cartList, _) {
+
+        final totalAmount = getTotalAmount(cartList);
+
+        return Column(
           children: [
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: cartList.length,
-              itemBuilder: (context, index) {
-                final item = cartList[index];
-                return cartcard(
-                  name: item.name,
-                  brand: item.brand,
-                  image: item.image,
-                  price: item.price,
-                  offer: item.offer,
-                  size: item.size,
-                  color: item.color,
-                  quantity: item.quantity,
 
-                  onIncrease: () {
-                    setState(() {
-                      item.quantity++;
-                    });
-                  },
+            // ================= CART ITEMS =================
+            if (cartList.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(40),
+                child: Text(
+                  "Your cart is empty",
+                  style: TextStyle(fontSize: 22, color: Colors.grey),
+                ),
+              )
+            else
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: cartList.length,
+                itemBuilder: (context, index) {
+                  final item = cartList[index];
 
-                  onDecrease: () {
-                    setState(() {
+                  return cartcard(
+                    name: item.name,
+                    brand: item.brand,
+                    image: item.image,
+                    price: item.price,
+                    offer: item.offer,
+                    size: item.size,
+                    color: item.color,
+                    quantity: item.quantity,
+
+                    onIncrease: () {
+                      final list = List<CartItem>.from(cartList);
+                      list[index].quantity++;
+                      cartListNotifier.value = list;
+                    },
+
+                    onDecrease: () {
                       if (item.quantity > 1) {
-                        item.quantity--;
+                        final list = List<CartItem>.from(cartList);
+                        list[index].quantity--;
+                        cartListNotifier.value = list;
                       }
-                    });
-                  },
+                    },
 
-                  onRemove: () {
-                    setState(() {
-                      cartList.removeAt(index);
-                    });
-                  },
-                );
+                    onRemove: () {
+                      final list = List<CartItem>.from(cartList);
+                      list.removeAt(index);
+                      cartListNotifier.value = list;
+                    },
+                  );
+                },
+              ),
 
-              },
-            ),
-
-
+            // ================= PROMO =================
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.04,
+                vertical: screenHeight * 0.02,
+              ),
               child: Material(
                 elevation: 3,
                 borderRadius: BorderRadius.circular(12),
                 color: Colors.grey[100],
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  height: 60,
+                  height: screenHeight * 0.075,
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                   child: Row(
                     children: [
-                      const SizedBox(width: 12),
-                      Expanded(
+                      const Expanded(
                         child: TextField(
                           decoration: InputDecoration(
                             hintText: "Enter your promo code",
                             hintStyle: TextStyle(
-                              color: Colors.grey[500],
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
+                              fontSize: 25,
+                              color: Colors.grey
                             ),
-                            border: InputBorder.none, // removes the default underline
+                            border: InputBorder.none,
                           ),
-                          style: const TextStyle(fontSize: 18),
-                          onChanged: (value) {
-                            // Save promo code value here
-                            // promoCode = value;
-                          },
                         ),
                       ),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        child: Material(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(50),
-                          elevation: 4, // 👈 floating card effect
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(20),
-                            onTap: () {
-                              // 👇🏼👇🏼👇🏼👇🏼👇🏼👇🏼favorite action
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Icon(Icons.arrow_forward, color: Colors.white),
-                            ),
-                          ),
-                        ),
+                      IconButton(
+                        onPressed: (){},
+                        icon: const Icon(Icons.arrow_forward,
+                        size: 30,),
                       ),
                     ],
                   ),
@@ -161,77 +169,65 @@ class _cartState extends State<cart> {
               ),
             ),
 
+            // ================= TOTAL =================
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: Material(
-                borderRadius: BorderRadius.circular(16),
-                color: Colors.white,
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Total Amount:",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey
-                        ),
-                      ),
-                      Text(
-                        "${getTotalAmount()}\$",
-                        style: const TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
+              padding: EdgeInsets.all(screenWidth * 0.04),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Total Amount:",
+                    style: TextStyle(fontSize: 22, color: Colors.grey),
                   ),
-                ),
+                  Text(
+                    "$totalAmount\$",
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
               ),
             ),
 
+            // ================= CHECKOUT =================
             ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(Colors.red),
-                padding: WidgetStatePropertyAll(EdgeInsets.symmetric(
-                    horizontal: 180,
-                    vertical: 20
-                )
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.30,
+                  vertical: screenHeight * 0.025,
                 ),
-
-
               ),
-              //👇🏼👇🏼👇🏼👇🏼👇🏼👇🏼👇🏼👇🏼👇🏼 check out
-              onPressed: () {
+              onPressed: cartList.isEmpty
+                  ? null
+                  : () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>CheckoutPage(
-                      orderAmount: getTotalAmount(),
-                    ),
+                    builder: (_) =>
+                        CheckoutPage(orderAmount: totalAmount),
                   ),
                 );
               },
-
-              child: Text("CHECK OUT",
-
+              child: const Text(
+                "CHECK OUT",
                 style: TextStyle(
-                    letterSpacing: 2,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 2,
+                ),
+              ),
+            ),
 
-
-              ),),
-
-
-
+            const SizedBox(height: 30),
           ],
-        ),
-      ),
+        );
+      },
+    ),
+    ),
+
     );
   }
 }

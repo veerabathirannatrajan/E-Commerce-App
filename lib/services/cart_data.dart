@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class CartItem {
   final String name;
   final String brand;
@@ -18,8 +20,12 @@ class CartItem {
     required this.color,
     this.quantity = 1,
   });
+
 }
 
-List<CartItem> cartList = [];
-List<CartItem> favList = [];
+
+ValueNotifier<List<CartItem>> cartListNotifier =
+ValueNotifier<List<CartItem>>([]);
+ValueNotifier<List<CartItem>> favListNotifier =
+ValueNotifier<List<CartItem>>([]);
 

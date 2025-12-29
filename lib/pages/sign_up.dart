@@ -8,376 +8,355 @@ class sign_up extends StatefulWidget {
 }
 
 class _sign_upState extends State<sign_up> {
+  bool _obscurePassword = true;
 
+  String? password;
+  String? name;
+  String? email;
 
-
-  String password ='';
-  String name ='';
-  String email ='';
-
-
-  final TextEditingController emailController = TextEditingController();
   bool isEmailValid = false;
 
-  // email validate function
-
   bool checkEmail(String value) {
-    return value.trim().endsWith("@gmail.com");
+    return RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        .hasMatch(value.trim());
   }
 
-  bool validate (){
-    return  (password.isNotEmpty && name.isNotEmpty && email.isNotEmpty);
-  }
-
-
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        toolbarHeight: 120,
+        toolbarHeight: height / 10,
         elevation: 0,
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         title: Padding(
-          padding: const EdgeInsets.only(left: 16, top: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                icon: const Icon(
-                  Icons.arrow_back_ios_new,
-                  color: Colors.black,
-                  size: 24,
-                ),
-                onPressed: () {},
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Sign up',
-                style: TextStyle(
-                  fontSize: 45,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                  color: Colors.black,
-                ),
-              ),
-            ],
+          padding: EdgeInsets.all(width * 0.03),
+          child: Text(
+            'Sign up',
+            style: TextStyle(
+              fontSize: width * 0.12,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 2,
+              color: Colors.black,
+            ),
           ),
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+            child: Column(
+              children: [
+                SizedBox(height: height / 15),
 
-          children: [
-
-            Center(
-              child: Container(
-                width: 1200,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey[100],
-
-                ) ,
-
-
-
-                child: TextFormField(
-                  style: const TextStyle(
-                    fontSize: 22, // 👈 input text size
+                // NAME
+                Container(
+                  width: width * 0.9,
+                  height: height / 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[100],
                   ),
-                  textAlignVertical: TextAlignVertical.center,
-                  decoration:InputDecoration(
-                      hint: Text("Name",
-                        style:TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 20
-                        ),
+                  child: TextFormField(
+                    style: TextStyle(fontSize: width * 0.045),
+                    decoration: InputDecoration(
+                      errorStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: width * 0.035,
+                        height: 0.8,
                       ),
-                      focusColor: Colors.redAccent,
-                      prefixIcon: Icon(Icons.person),
+                      hintText: "Name",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: width * 0.045,
+                      ),
+                      prefixIcon: Icon(Icons.person, size: width * 0.07),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 35
+                        horizontal: width * 0.04,
+                        vertical: height * 0.018,
                       ),
-
-                      fillColor: Colors.white
+                    ),
+                    onChanged: (value) => name = value,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Name is required';
+                      }
+                      if (value.trim().length < 3) {
+                        return 'Name must be at least 3 characters';
+                      }
+                      return null;
+                    },
                   ),
-                  onChanged: (value){
-                    setState(() {
-                      name=value;
-                    });
-                  },
-
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Name is required';
-                    }
-                    return null;
-                  },
                 ),
-              ),
-            ),
 
-            SizedBox(height: 20,),
+                SizedBox(height: height / 80),
 
-            Center(
-              child: Container(
-                height: 80,
-                width: 1200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey[100],
-
-                ) ,
-
-
-                child: TextFormField(
-
-                  decoration:InputDecoration(
+                // EMAIL
+                Container(
+                  width: width * 0.9,
+                  height: height / 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[100],
+                  ),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      errorStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: width * 0.035,
+                        height: 0.8,
+                      ),
                       suffixIcon: Icon(
-                        isEmailValid ? Icons.check_outlined : Icons.close,
+                        isEmailValid ? Icons.check : Icons.close,
                         color: isEmailValid ? Colors.green : Colors.red,
-                        size: 30,
+                        size: width * 0.07,
                       ),
-                      hint: Text("Email",
-                        style:TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 20
-                        ),
+                      hintText: "Email",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: width * 0.045,
                       ),
-
-                      prefixIcon: Icon(Icons.mail_outlined),
-
+                      prefixIcon: Icon(Icons.mail_outlined, size: width * 0.07),
                       contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 35
+                        horizontal: width * 0.04,
+                        vertical: height * 0.018,
                       ),
                       border: InputBorder.none,
-
-                      fillColor: Colors.white
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        email = value;
+                        isEmailValid = checkEmail(value);
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Email is required';
+                      }
+                      if (!checkEmail(value)) {
+                        return 'Enter a valid email address';
+                      }
+                      return null;
+                    },
                   ),
-                  onChanged: (value){
-                    setState(() {
-                      isEmailValid = checkEmail(value);
-                    });
-                  },
-
-                  validator: (value) {
-                    if (value==null||value.isEmpty){
-                      return"email cannot be null";
-                    }
-                    if (!value.endsWith("@gmail.com")) {
-                      return "Email must end with @gmail.com";
-                    }
-                    return null;
-                  },
                 ),
-              ),
-            ),
-            SizedBox(height: 10,),
 
-            Center(
-              child: Container(
-                width: 1200,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey[100],
+                SizedBox(height: height / 80),
 
-                ) ,
-
-
-
-                child: TextFormField(
-                  textAlignVertical: TextAlignVertical.center,
-                  decoration:InputDecoration(
-                      hint: Text("Password",
-                        style:TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 20
-                        ),
+                // PASSWORD
+                Container(
+                  width: width * 0.9,
+                  height: height / 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[100],
+                  ),
+                  child: TextFormField(
+                    obscureText: _obscurePassword,
+                    decoration: InputDecoration(
+                      errorStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: width * 0.035,
+                        height: 0.8,
                       ),
-                      focusColor: Colors.redAccent,
-                      prefixIcon: Icon(Icons.password_sharp),
+                      hintText: "Password",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: width * 0.045,
+                      ),
+                      prefixIcon: Icon(Icons.password_sharp, size: width * 0.07),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          size: width * 0.07,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 35
+                        horizontal: width * 0.04,
+                        vertical: height * 0.018,
                       ),
-
-                      fillColor: Colors.white
+                    ),
+                    onChanged: (value) => password = value,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password is required';
+                      }
+                      if (!RegExp(
+                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+                      ).hasMatch(value)) {
+                        return 'Password must contain A-Z, a-z, 0-9 & special char';
+                      }
+                      return null;
+                    },
                   ),
-                  onChanged: (value){
-                    setState(() {
-                      password=value;
-                    });
-                  },
-
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Password is required';
-                    }
-                    return null;
-                  },
                 ),
-              ),
-            ),
 
-            SizedBox(height: 15,),
+                SizedBox(height: height / 80),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Already have an account ?",
-                  style: TextStyle(
+                // ALREADY HAVE ACCOUNT
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/login');
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Already have account ?",
+                        style: TextStyle(
+                          letterSpacing: 1,
+                          fontWeight: FontWeight.bold,
+                          fontSize: width * 0.037,
+                        ),
+                      ),
+                      SizedBox(width: width / 50),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/login');
+                        },
+                        icon: Icon(Icons.arrow_forward,
+                            color: Colors.red, size: width * 0.06),
+                      ),
+                      SizedBox(width: width / 50),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: height / 25),
+
+                // SIGN UP BUTTON
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                    const MaterialStatePropertyAll(Colors.red),
+                    padding: MaterialStatePropertyAll(
+                      EdgeInsets.symmetric(
+                        horizontal: width * 0.35,
+                        vertical: height * 0.02,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.pushReplacementNamed(context, '/main');
+                    }
+                  },
+                  child: Text(
+                    "SIGN UP",
+                    style: TextStyle(
                       letterSpacing: 1,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15
-
-                  ),),
-                SizedBox(width: 10,),
-
-                IconButton(onPressed: (){
-                  Navigator.pushNamed(context, '/login');
-                },
-                  icon: Icon(Icons.arrow_forward),
-                  color: Colors.red,)
-
-              ],
-            ),
-
-            SizedBox(
-              height: 30,
-            ),
-
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(Colors.red),
-                padding: WidgetStatePropertyAll(EdgeInsets.symmetric(
-                    horizontal: 200,
-                    vertical: 25
-                )
+                      fontSize: width * 0.05,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
 
+                SizedBox(height: height / 8),
 
-              ),
-
-              onPressed: (){
-                Navigator.pushReplacementNamed(context, '/main');
-
-              },
-              child: Text("SIGN UP",
-
-                style: TextStyle(
+                // SOCIAL LOGIN
+                Text(
+                  "Or login with social account",
+                  style: TextStyle(
                     letterSpacing: 1,
-                    fontSize: 20,
-                    color: Colors.white),
-
-
-              ),),
-
-            SizedBox(
-              height: 100,
-            ),
-
-            Text("Or login with social account" ,
-              style: TextStyle(
-                letterSpacing: 1,
-                fontSize: 20,
-                color: Colors.black,
-
-              ),
-            ),
-
-            SizedBox(height: 40,),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-
-
-                Material(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () {
-                      print("google button clicked");
-                    },
-                    child: Container(
-                      height: 80,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(20),),
-                      child: Center(
-                        child: SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image:const  DecorationImage(image: AssetImage("assets/images/google.png"),
-                                  fit: BoxFit.fill),
-                            ),
-                          ),
-
-
-                        ),
-                      ),
-                    ),
+                    fontSize: width * 0.045,
+                    color: Colors.black,
                   ),
                 ),
+                SizedBox(height: height / 60),
 
-                SizedBox(width: 20,),
-
-
-                Material(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () {
-                      print("Facebook button clicked");
-                    },
-                    child: Container(
-                      height: 80,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(20),),
-                      child: Center(
-                        child: SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image:const  DecorationImage(image: AssetImage("assets/images/facebook.png"),
-                                  fit: BoxFit.fill),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // GOOGLE
+                    Material(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () => print("Google login"),
+                        child: Container(
+                          height: height / 13,
+                          width: height / 13,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Container(
+                              height: height / 26,
+                              width: height / 26,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: const DecorationImage(
+                                  image:
+                                  AssetImage("assets/images/google.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                             ),
                           ),
-
-
                         ),
                       ),
                     ),
-                  ),
-                )
+
+                    SizedBox(width: width / 20),
+
+                    // FACEBOOK
+                    Material(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () => print("Facebook login"),
+                        child: Container(
+                          height: height / 13,
+                          width: height / 13,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Container(
+                              height: height / 26,
+                              width: height / 26,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: const DecorationImage(
+                                  image: AssetImage(
+                                      "assets/images/facebook.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: height / 15),
               ],
             ),
-
-
-
-          ],
+          ),
         ),
       ),
     );

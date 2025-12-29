@@ -10,495 +10,314 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-
   @override
   Widget build(BuildContext context) {
+    // MediaQuery for responsive sizing
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text("Checkout",
-        style: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
 
-        ),
+      // ================= APP BAR =================
+      appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: Colors.white,
+        title: const Text(
+          "Checkout",
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
+        toolbarHeight: screenHeight/15,
+        leading: IconButton(onPressed: (){
+          Navigator.pop(context);
+        },
+            icon: Icon(Icons.arrow_back_ios)),
       ),
-      body: Column(
-        children: [
+      
 
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(screenWidth * 0.04),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: screenHeight * 0.02),
 
-
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Shipping address",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30
-                  ),),
-
-                SizedBox(height: 20,),
-                Stack(
-                  children: [
-                    Container(
-                      height: 150,
-                      width: 465,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white
-                      ),
-                    ),
-
-                    Positioned(
-                      top: 5,
-                      right: 20,
-                      child: TextButton(
-                        //👇🏼👇🏼👇🏼 change
-                        onPressed: (){
-
-                        },
-                          child: Text("Change",
-                            style: TextStyle(
-
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20
-                            ),
-                          ),
-                      ),
-                    ),
-
-                    Positioned(
-                      top: 20,
-                      left: 45,
-
-                      child:Text("Jane doe",
-                      style: TextStyle(
-
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 30
-                      ),
-                    ),
-                    ),
-
-                    Positioned(
-                      bottom: 30,
-                      left: 45,
-
-                      child:Text("3 Newbridge Court\nChino Hills, CA 91709, United States",
-                        style: TextStyle(
-
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20
-                        ),
-                      ),
-                    ),
-                  ],
+              // ================= SHIPPING ADDRESS =================
+              Text(
+                "Shipping address",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 30,
                 ),
-                SizedBox(height: 40,),
-
-
-                Stack(
-                  children: [
-                    Container(
-                      height: 150,
-                      width: 465,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey[100]
-                      ),
+              ),
+              SizedBox(height: screenHeight * 0.02),
+              Stack(
+                children: [
+                  Container(
+                    height: screenHeight * 0.15,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
                     ),
-
-                    Positioned(
-                      top: 5,
-                      right: 20,
-                      child: TextButton(
-                        //👇🏼👇🏼👇🏼 change
-                        onPressed: (){
-
-                        },
-                        child: Text("Change",
-                          style: TextStyle(
-
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    Positioned(
-                      top: 10,
-                      left: 5,
-
-                      child:Text("Payment",
+                  ),
+                  Positioned(
+                    top: screenHeight * 0.012,
+                    right: screenWidth * 0.05,
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Change",
                         style: TextStyle(
-
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 30
-                        ),
-                      ),
-                    ),
-
-                    Positioned(
-                      bottom: 10,
-                      left: 5,
-
-                      child:Material(
-                        borderRadius: BorderRadius.circular(20),
-                        elevation: 100,
-                        child: SizedBox(
-                          height: 80,
-                          width: 130,
-                          child: Container(
-                            decoration: BoxDecoration(
-
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-
-                            ),
-                            child: Center(
-                              child: Container(
-                                height: 50,
-                                width: 90,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(image: AssetImage('assets/images/mastercard.png'),
-                                  fit: BoxFit.contain),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-
-                                ),
-
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    ),
-                    Positioned(
-                      bottom: 30,
-                      left: 150,
-
-                      child:Text("**** **** **** 3947",
-                        style: TextStyle(
-
-                            color: Colors.black,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 30
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 15,),
-                Divider(
-                  thickness: 1,
-                  color: Colors.grey,
-
-                ),
-                SizedBox(height: 15,),
-
-
-                Stack(
-                  children: [
-                    Container(
-                      height: 180,
-                      width: 465,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey[100]
-                      ),
-                    ),
-
-
-                    Positioned(
-                      top: 0,
-                      left: 5,
-
-                      child:Text("Delivery method",
-                        style: TextStyle(
-
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 30
-                        ),
-                      ),
-                    ),
-
-                    Positioned(
-                        bottom: 0,
-                        left: 5,
-
-                        child:Row(
-                          children: [
-                            Material(
-                              borderRadius: BorderRadius.circular(20),
-                              elevation: 100,
-                              child: SizedBox(
-                                height: 100,
-                                width: 130,
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-
-                                      ),
-                                      child: Center(
-                                        child: Container(
-                                          height: 70,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(image: AssetImage('assets/images/fedex.png'),
-                                                fit: BoxFit.fill),
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(20),
-
-                                          ),
-
-                                        ),
-                                      ),
-                                    ),
-
-                                    Positioned(
-                                      bottom: 5,
-                                      left: 30,
-
-                                      child:Text("2-3 days",
-                                        style: TextStyle(
-
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 20
-                                        ),
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 25,),
-
-                            Material(
-                              borderRadius: BorderRadius.circular(20),
-                              elevation: 100,
-                              child: SizedBox(
-                                height: 100,
-                                width: 130,
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-
-                                      ),
-                                      child: Center(
-                                        child: Container(
-                                          height: 70,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(image: AssetImage('assets/images/usps.png'),
-                                                fit: BoxFit.fill),
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(20),
-
-                                          ),
-
-                                        ),
-                                      ),
-                                    ),
-
-                                    Positioned(
-                                      bottom: 5,
-                                      left: 30,
-
-                                      child:Text("2-3 days",
-                                        style: TextStyle(
-
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 20
-                                        ),
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 25,),
-
-                            Material(
-                              borderRadius: BorderRadius.circular(20),
-                              elevation: 100,
-                              child: SizedBox(
-                                height: 100,
-                                width: 130,
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-
-                                      ),
-                                      child: Center(
-                                        child: Container(
-                                          height: 70,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(image: AssetImage('assets/images/dhl.png'),
-                                                fit: BoxFit.fill),
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(20),
-
-                                          ),
-
-                                        ),
-                                      ),
-                                    ),
-
-                                    Positioned(
-                                      bottom: 5,
-                                      left: 30,
-
-                                      child:Text("2-3 days",
-                                        style: TextStyle(
-
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 20
-                                        ),
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-                              ),
-                            ),
-
-
-
-                          ],
-                        )
-                    ),
-
-                  ],
-                ),
-
-                SizedBox(height: 60,),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Order: ",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30
-                    ),),
-
-                    Text("${widget.orderAmount}\$",
-                      style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.red,
                           fontWeight: FontWeight.bold,
-                          fontSize: 30
-                      ),),
-                  ],
-                ),
-
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("Delivery: ",
-            style: TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.bold,
-                fontSize: 30
-            ),),
-
-          Text("15\$",
-            style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 30
-            ),),
-        ],
-      ),
-
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("Total: ",
-            style: TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.bold,
-                fontSize: 30
-            ),),
-
-          Text("${widget.orderAmount + 15}\$",
-            style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 30
-            ),),
-        ],
-      ),
-
-
-                SizedBox(height: 30,),
-
-
-
-
-
-
-                /// ✅ SUBMIT BUTTON
-                SizedBox(
-                  width: double.infinity,
-                  height: 55,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                    ),
-                    onPressed: () {
-                      // submit order logic
-                    },
-                    child: const Text(
-                      "SUBMIT ORDER",
-                      style: TextStyle(
-                        fontSize: 20,
-                        letterSpacing: 2,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
+                          fontSize: screenWidth * 0.045,
+                        ),
                       ),
                     ),
                   ),
+                  Positioned(
+                    top: screenHeight * 0.03,
+                    left: screenWidth * 0.07,
+                    child: Text(
+                      "Jane doe",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: screenWidth * 0.06,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: screenHeight * 0.03,
+                    left: screenWidth * 0.07,
+                    child: Text(
+                      "3 Newbridge Court\nChino Hills, CA 91709, United States",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: screenWidth * 0.04,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: screenHeight * 0.07),
+
+              // ================= PAYMENT =================
+              Stack(
+                children: [
+                  Container(
+                    height: screenHeight * 0.2,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                  ),
+                  Positioned(
+                    top: screenHeight * 0.012,
+                    right: screenWidth * 0.05,
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Change",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: screenWidth * 0.045,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: screenHeight * 0.02,
+                    left: screenWidth * 0.02,
+                    child: Text(
+                      "Payment",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w800,
+                        fontSize: screenWidth * 0.06,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: screenHeight * 0.02,
+                    left: screenWidth * 0.02,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(20),
+                      elevation: 3,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: SizedBox(
+                          height: screenHeight * 0.1,
+                          width: screenWidth * 0.3,
+                          child: Center(
+                            child: Container(
+                              height: screenHeight * 0.1,
+                              width: screenWidth * 0.17,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(0),
+                                image: const DecorationImage(
+                                  image: AssetImage('assets/images/mastercard.png'),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: screenHeight * 0.05,
+                    left: screenWidth * 0.4,
+                    child: Text(
+                      "**** **** **** 3947",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        fontSize: screenWidth * 0.055,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: screenHeight * 0.07),
+
+              // ================= DELIVERY METHOD =================
+              Text(
+                "Delivery method",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900,
+                  fontSize: screenWidth * 0.06,
                 ),
-              ],
+              ),
+              SizedBox(height: screenHeight * 0.015),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildDeliveryCard('assets/images/fedex.png' ,screenWidth, screenHeight),
+                    SizedBox(width: screenWidth * 0.04),
+                    _buildDeliveryCard('assets/images/usps.png', screenWidth, screenHeight),
+                    SizedBox(width: screenWidth * 0.04),
+                    _buildDeliveryCard('assets/images/dhl.png',screenWidth, screenHeight),
+                  ],
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.03),
+
+              // ================= ORDER DETAILS =================
+              _buildOrderRow("Order: ", "${widget.orderAmount}\$", screenWidth),
+              _buildOrderRow("Delivery: ", "15\$", screenWidth),
+              _buildOrderRow("Total: ", "${widget.orderAmount + 15}\$", screenWidth),
+              SizedBox(height: screenHeight * 0.03),
+
+              // ================= SUBMIT BUTTON =================
+              SizedBox(
+                width: double.infinity,
+                height: screenHeight * 0.07,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  onPressed: () {},
+                  child: Text(
+                    "SUBMIT ORDER",
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.05,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: screenHeight/14,)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ================= DELIVERY CARD WIDGET =================
+  Widget _buildDeliveryCard(String imagePath, double screenWidth, double screenHeight) {
+    return Material(
+      borderRadius: BorderRadius.circular(20),
+      elevation: 0,
+      child: Container(
+        height: screenHeight * 0.13,
+        width: screenWidth * 0.3,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          image: DecorationImage(image: AssetImage(imagePath,),
+          fit:BoxFit.cover)
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 50,
+            ),
+            Container(
+              height: 40,
+              color: Colors.white,
+              child: Center(
+                child: Text('2-3 days',style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 22
+                ),),
+              ),
+            )
+             // Image.asset(imagePath, height: screenHeight * 0.07, fit: BoxFit.contain),
+
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ================= ORDER ROW WIDGET =================
+  Widget _buildOrderRow(String title, String value, double screenWidth) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.015),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+              fontSize: screenWidth * 0.05,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: screenWidth * 0.05,
             ),
           ),
         ],
       ),
     );
   }
-
 }
