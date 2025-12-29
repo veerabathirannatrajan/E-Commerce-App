@@ -10,210 +10,129 @@ class categories extends StatefulWidget {
 
 class _categoriesState extends State<categories> {
   List categories = [
-    {'name':'New','image':'new.png'},
-    {'name':'Clothes','image':'clothes.png'},
-    {'name':'Shoes','image':'shoes.png'},
-    {'name':'Accessories','image':'accesories.png'},
-
+    {'name': 'New', 'image': 'new.png'},
+    {'name': 'Clothes', 'image': 'clothes.png'},
+    {'name': 'Shoes', 'image': 'shoes.png'},
+    {'name': 'Accessories', 'image': 'accesories.png'},
   ];
 
-  Color cat1 = Colors.white;
-  Color cat2 = Colors.white;
-  Color cat3 = Colors.white;
+  int selectedTab = 0;
 
   @override
   Widget build(BuildContext context) {
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
+
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            SizedBox(width: 100,),
-
-            Text(
-              'Categories',
-              style: TextStyle(
-                fontSize: 30,
-                letterSpacing: 2,
-                fontWeight: FontWeight.w800,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(width: 120,),
-
-            IconButton(onPressed: (){
-            },
-              icon: Icon(Icons.search,
-              size: 30,),
-              color: Colors.black,)
-
-          ],
-        ),
+        elevation: 0,
         centerTitle: true,
+        title: Text(
+          'Categories',
+          style: TextStyle(
+            fontSize: w * 0.07,
+            letterSpacing: 2,
+            fontWeight: FontWeight.w800,
+            color: Colors.black,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search, size: w * 0.07, color: Colors.black),
+            onPressed: () {},
+          ),
+        ],
       ),
 
-      body: SingleChildScrollView(
-        child: Column(
-        
-        
-          children: [
-        
-            Row(
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: w * 0.03),
+        children: [
+
+          // ================== CATEGORY TABS ==================
+          Row(
+            children: List.generate(3, (index) {
+              final titles = ['Women', 'Men', 'Kids'];
+              return Expanded(
+                child: InkWell(
+                  onTap: () {
+                    setState(() => selectedTab = index);
+                  },
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: h * 0.06,
+                        child: Center(
+                          child: Text(
+                            titles[index],
+                            style: TextStyle(
+                              fontSize: w * 0.055,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 4,
+                        color: selectedTab == index
+                            ? Colors.red
+                            : Colors.transparent,
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+
+          SizedBox(height: h * 0.03),
+
+          // ================== SALE BANNER ==================
+          Container(
+            height: h * 0.14,
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                InkWell(
-                  onTap: (){
-                    setState(() {
-                      cat1=Colors.red;
-                      cat2=Colors.white;
-                      cat3=Colors.white;                  });
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 169,
-                        color: Colors.white,
-                        child: Center(
-                          child: Text(
-                            'Women',
-                            style: TextStyle(
-                              fontSize: 30,
-                              letterSpacing: 2,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                          height: 5,
-                          width: 169,
-                          color: cat1,
-                      )
-                    ],
+                Text(
+                  'SUMMER SALES',
+                  style: TextStyle(
+                    fontSize: w * 0.07,
+                    letterSpacing: 2,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
                   ),
                 ),
-                InkWell(
-                  onTap: (){
-                    setState(() {
-                      cat1=Colors.white;
-                      cat2=Colors.red;
-                      cat3=Colors.white;
-        
-        
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 169,
-                        color: Colors.white,
-                        child: Center(
-                          child: Text(
-                            'men',
-                            style: TextStyle(
-                              fontSize: 30,
-                              letterSpacing: 2,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 5,
-                        width: 169,
-                        color: cat2,
-                      )
-                    ],
-                  ),
-                ),
-                InkWell(
-                  onTap: (){
-                    setState(() {
-                      cat1=Colors.white;
-                      cat2=Colors.white;
-                      cat3=Colors.red;                  });
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 169,
-                        color: Colors.white,
-                        child: Center(
-                          child: Text(
-                            'Kids',
-                            style: TextStyle(
-                              fontSize: 30,
-                              letterSpacing: 2,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 5,
-                        width: 169,
-                        color: cat3,
-                      )
-                    ],
+                Text(
+                  'Up to 50% off',
+                  style: TextStyle(
+                    fontSize: w * 0.045,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
                   ),
                 ),
               ],
             ),
-        
-            SizedBox(height: 20,),
-        
-            Container(
-              height: 120,
-              width: 450,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child:  Column(
-                children: [
-                  SizedBox(height: 25,),
-                  Text(
-                    'SUMMER SALES',
-                    style: TextStyle(
-                      fontSize: 30,
-                      letterSpacing: 2,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'Up to 50% off',
-                    style: TextStyle(
-                      fontSize: 20,
-                      letterSpacing: 2,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 900,
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: categories.map((product) {
-                  return catCard(name: product['name'],
-                    image: product['image'],
-                    );
-                }).toList(),
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
 
+          SizedBox(height: h * 0.02),
+
+          // ================== CATEGORY LIST ==================
+          ...categories.map((product) {
+            return catCard(
+              name: product['name'],
+              image: product['image'],
+            );
+          }).toList(),
+        ],
+      ),
     );
   }
 }
