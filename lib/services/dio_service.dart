@@ -6,8 +6,8 @@ class ApiService {
   static final Dio dio = Dio(
     BaseOptions(
       baseUrl: 'https://e-commerce-app-backend-6mvs.onrender.com/',
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
     ),
   );
   static Future<List<Product>> fetchProducts() async {
