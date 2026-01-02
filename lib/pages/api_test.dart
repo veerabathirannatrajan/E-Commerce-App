@@ -40,7 +40,9 @@ class _ApiTestState extends State<ApiTest> {
         future: productsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return  Center(child: CircularProgressIndicator(
+              color: Colors.red,
+            ));
           }
 
           if (snapshot.hasError) {
@@ -96,46 +98,14 @@ class _ApiTestState extends State<ApiTest> {
 
               // ================= HERO SECTION =================
               SliverToBoxAdapter(
-                child: Stack(
-                  children: [
-                    Container(
-                      height: height * 0.35,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/main2.jpg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                child: Container(
+                  height: height * 0.35,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/hero.png'),
+                      fit: BoxFit.cover,
                     ),
-                    Container(
-                      height: height * 0.35,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            Colors.black.withOpacity(0.7),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: height * 0.04,
-                      left: width * 0.05,
-                      right: width * 0.05,
-                      child: Text(
-                        'Street clothes',
-                        style: TextStyle(
-                          fontSize: width * 0.13,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 2,
-                          color: Colors.white,
-                          height: 0.9,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
 
@@ -155,7 +125,7 @@ class _ApiTestState extends State<ApiTest> {
                   delegate: SliverChildBuilderDelegate(
                         (context, index) {
                       final p = products[index];
-                      return ProductCard(
+                      return ProductCard_api(
                         name: p.name,
                         brand: p.brand,
                         imageUrl: p.images.isNotEmpty ? p.images.first : '',

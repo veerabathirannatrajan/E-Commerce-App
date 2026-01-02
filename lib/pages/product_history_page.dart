@@ -59,7 +59,7 @@ class _ProductHistoryPageState extends State<ProductHistoryPage> {
                     fit: BoxFit.cover,
                   ),
                   title: Text(p.name),
-                  subtitle: Text('${p.brand}  •  ₹${p.price}'),
+                  subtitle: Text('${p.brand}  •  \$${p.price}'),
 
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,

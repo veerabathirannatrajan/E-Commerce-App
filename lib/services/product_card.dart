@@ -21,6 +21,20 @@ class ProductCard extends StatelessWidget {
     required this.rating,
   });
 
+  ImageProvider imgurl(String imageUrl) {
+    if (imageUrl.isEmpty) {
+      return const AssetImage('assets/images/loading.png');
+    }
+
+    if (imageUrl.startsWith('http')) {
+      return NetworkImage(imageUrl);
+    }
+
+    return AssetImage('assets/images/$imageUrl');
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -76,11 +90,13 @@ class ProductCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
-                          image: AssetImage('assets/images/$image'),
                           fit: BoxFit.cover,
+                          image: imgurl(image),
+                          onError: (_, __) {},
                         ),
                       ),
                     ),
+
 
                     // ================= OFFER TAG =================
                     Positioned(

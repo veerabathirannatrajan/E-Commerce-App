@@ -108,7 +108,7 @@ class _MainShellState extends State<MainShell>
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_bag_outlined, size: 40),
-                label: 'Bag',
+                label: 'shop',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.favorite_border, size: 40),

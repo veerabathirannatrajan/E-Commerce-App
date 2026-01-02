@@ -101,13 +101,10 @@ class _profileState extends State<profile> {
               SizedBox(height: height * 0.04),
               ElevatedButton(
                 style: ButtonStyle(
+
                   backgroundColor: MaterialStatePropertyAll(Colors.red),
-                  padding: MaterialStatePropertyAll(
-                    EdgeInsets.symmetric(
-                      horizontal: width * 0.3,
-                      vertical: height * 0.02,
-                    ),
-                  ),
+                    fixedSize: WidgetStatePropertyAll(Size(400,70)),
+
                 ),
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true)
@@ -128,8 +125,8 @@ class _profileState extends State<profile> {
               // Logout button
               ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(Colors.redAccent),
-                  padding: WidgetStatePropertyAll(EdgeInsets.all(20))
+                  fixedSize: WidgetStatePropertyAll(Size(400,70)),
+                  backgroundColor: WidgetStatePropertyAll(Colors.red),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -150,8 +147,8 @@ class _profileState extends State<profile> {
 
               ElevatedButton(
                 style: ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(Colors.redAccent),
-                    padding: WidgetStatePropertyAll(EdgeInsets.all(20))
+                  fixedSize: WidgetStatePropertyAll(Size(400,70)),
+                    backgroundColor: WidgetStatePropertyAll(Colors.red),
                 ),
                 onPressed: () {
                   Navigator.push(

@@ -12,6 +12,7 @@ class FavCard extends StatelessWidget {
   });
 
   void addToCart(BuildContext context) {
+    
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
@@ -52,6 +53,20 @@ class FavCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    ImageProvider imgurl(String imageUrl) {
+      if (imageUrl.isEmpty) {
+        return const AssetImage('assets/images/loading.png');
+      }
+
+      if (imageUrl.startsWith('http')) {
+        return NetworkImage(imageUrl);
+      }
+
+      return AssetImage('assets/images/$imageUrl');
+    }
+
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
 
@@ -74,7 +89,7 @@ class FavCard extends StatelessWidget {
                     left: Radius.circular(16),
                   ),
                   image: DecorationImage(
-                    image: AssetImage('assets/images/${item.image}'),
+                    image: imgurl(item.image),
                     fit: BoxFit.cover,
                   ),
                 ),

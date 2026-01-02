@@ -1,8 +1,7 @@
-import 'package:e_com/pages/api-product.dart';
 import 'package:e_com/pages/product.dart';
 import 'package:flutter/material.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard_api extends StatelessWidget {
   final String name;
   final String brand;
   final String imageUrl;
@@ -11,7 +10,7 @@ class ProductCard extends StatelessWidget {
   final String offer;
   final String rating;
 
-  const ProductCard({
+  const ProductCard_api({
     super.key,
     required this.name,
     required this.brand,
@@ -34,7 +33,7 @@ class ProductCard extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => apiproduct(
+              builder: (_) => product(
                 name: name,
                 brand: brand,
                 image: imageUrl,

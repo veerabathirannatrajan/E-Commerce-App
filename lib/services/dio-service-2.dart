@@ -49,6 +49,15 @@ class api2 extends StatefulWidget {
 }
 
 class _api2State extends State<api2> {
+  late Future<Map<String, dynamic>> productFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    productFuture = Api.getprod(id);
+  }
+
+
   int id = 89;
   Map<String, dynamic>? resultData;
   String action = '';
@@ -65,7 +74,7 @@ class _api2State extends State<api2> {
 
               const Text('GET', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
               FutureBuilder<Map<String, dynamic>>(
-                future: Api.getprod(id),
+                future: productFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
@@ -73,16 +82,18 @@ class _api2State extends State<api2> {
                   if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   }
+
                   final p = snapshot.data!;
                   return Text("""
-                        id : ${p['id']}
-                        title : ${p['title']}
-                        price : ${p['price']}
-                        description : ${p['description']}
-                        image : ${p['images'][0]}
-                        """);
+                      id : ${p['id']}
+                      title : ${p['title']}
+                      price : ${p['price']}
+                      description : ${p['description']}
+                      image : ${p['images'][0]}
+                      """);
                 },
               ),
+
 
               const SizedBox(height: 30),
 
@@ -97,8 +108,10 @@ class _api2State extends State<api2> {
                     id = p['id'];
                     resultData = p;
                     action = 'POST';
+                    productFuture = Api.getprod(id);
                   });
                 },
+
                 child: const Text('POST'),
               ),
 
@@ -112,8 +125,10 @@ class _api2State extends State<api2> {
                   setState(() {
                     resultData = p;
                     action = 'PUT';
+                    productFuture = Api.getprod(id);
                   });
                 },
+
                 child: const Text('PUT'),
               ),
 
@@ -142,13 +157,13 @@ class _api2State extends State<api2> {
 
               if (resultData != null)
                 Text("""
-$action RESULT
-id : ${resultData!['id']}
-title : ${resultData!['title']}
-price : ${resultData!['price']}
-description : ${resultData!['description']}
-image : ${resultData!['images'][0]}
-""", style: const TextStyle(fontWeight: FontWeight.bold)),
+                      $action RESULT
+                      id : ${resultData!['id']}
+                      title : ${resultData!['title']}
+                      price : ${resultData!['price']}
+                      description : ${resultData!['description']}
+                      image : ${resultData!['images'][0]}
+                      """, style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
         ),

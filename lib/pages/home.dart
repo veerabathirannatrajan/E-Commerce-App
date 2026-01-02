@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:e_com/pages/api_test.dart';
+import 'package:e_com/services/convert_2_data.dart';
 import 'package:e_com/services/dio-service-2.dart';
+import 'package:e_com/services/dio_service.dart';
 import 'package:e_com/services/product_card.dart';
+import 'package:e_com/services/product_card-from-db.dart';
+
 import 'package:flutter/material.dart';
 
 class home extends StatefulWidget {
@@ -14,28 +18,19 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
-   List products = [
-    {'brand':'Urban Edge','name':'Minimal Accessories Set','price':'18','tag':'NEW','image':'accesories.png','offer':'10%','rating':'4'},
-    {'brand':'Noir Studio','name':'Classic Black Outfit','price':'48','tag':'NEW','image':'black.png','offer':'15%','rating':'5'},
-    {'brand':'Velora','name':'Soft Cotton Blouse','price':'36','tag':'NEW','image':'Blouse.png','offer':'10%','rating':'5'},
-    {'brand':'Street Mode','name':'Casual Street Wear','price':'58','tag':'NEW','image':'clothes.png','offer':'20%','rating':'4'},
-    {'brand':'Luna Wear','name':'Elegant Evening Dress','price':'82','tag':'NEW','image':'Evening Dress.png','offer':'15%','rating':'5'},
-    {'brand':'North Peak','name':'Winter Comfort Hoodie','price':'44','tag':'NEW','image':'hoodies.png','offer':'10%','rating':'4'},
-    {'brand':'Pure Silk','name':'Light Summer Blouse','price':'34','tag':'NEW','image':'Light blouse.png','offer':'10%','rating':'4'},
-    {'brand':'VioLine','name':'Long Sleeve Casual Top','price':'39','tag':'NEW','image':'Longsleeve Violeta.png','offer':'12%','rating':'5'},
-    {'brand':'ColdWave','name':'Warm Knit Pullover','price':'46','tag':'NEW','image':'Pullover.png','offer':'10%','rating':'4'},
-    {'brand':'Prime Tailor','name':'Slim Fit Formal Shirt','price':'52','tag':'NEW','image':'Shirt.png','offer':'10%','rating':'4'},
-    {'brand':'Urban Stitch','name':'Checked Casual Shirt','price':'49','tag':'NEW','image':'Shirt (2).png','offer':'10%','rating':'4'},
-    {'brand':'Modern Fit','name':'Relaxed Cotton Shirt','price':'47','tag':'NEW','image':'Shirt (3).png','offer':'10%','rating':'3'},
-    {'brand':'Active Life','name':'Breathable Sport Dress','price':'62','tag':'NEW','image':'Sport Dress.png','offer':'15%','rating':'5'},
-    {'brand':'Flex Wear','name':'Performance Training Dress','price':'68','tag':'NEW','image':'Sport Dress (2).png','offer':'15%','rating':'5'},
-    {'brand':'Ocean Blue','name':'Sailing Graphic T-Shirt','price':'22','tag':'NEW','image':'T-Shirt Sailing.png','offer':'10%','rating':'4'},
-    {'brand':'Daily Basics','name':'Essential White T-Shirt','price':'19','tag':'NEW','image':'T-shirt.png','offer':'10%','rating':'4'},
-    {'brand':'Casual Core','name':'Printed Casual Tee','price':'21','tag':'NEW','image':'T-Shirt (2).png','offer':'10%','rating':'4'},
-    {'brand':'Urban Flex','name':'Modern Fit Tee','price':'23','tag':'NEW','image':'T-Shirt (3).png','offer':'10%','rating':'4'},
-    {'brand':'Espana Style','name':'Spanish Graphic T-Shirt','price':'25','tag':'NEW','image':'T-Shirt SPANISH.png','offer':'10%','rating':'4'},
-    {'brand':'Step Up','name':'Elegant High Heel Shoes','price':'74','tag':'NEW','image':'shoes.png','offer':'20%','rating':'5'},
-  ];
+  late Future<List<Product>> productsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    loadProducts();
+  }
+  void loadProducts()
+  {
+    productsFuture = ApiService.fetchProducts();
+  }
+
+
 
    Future<Map<String, dynamic>>getweather(String city) async{
      final dio =  Dio();
@@ -148,80 +143,6 @@ class _homeState extends State<home> {
               ],
             ),
             SizedBox(height: height * 0.03),
-            Center(
-              child: SizedBox(
-                height: height/6,
-                child: FutureBuilder(future: getweather('chennai'),
-                  builder: (context, snapshot) {
-                   if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    }
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-                    if (snapshot.hasData) {
-                      final data = snapshot.data!;
-                      final city = data['name'];
-                      final temp = data['main']['temp'];
-                      final description = data['weather'][0]['description'];
-
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-
-                          Text(
-                            city,
-                            style:  TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                           SizedBox(height: 10),
-                          Text(
-                            '$temp \' C',
-                            style: TextStyle(fontSize: 22),
-                          ),
-                           SizedBox(height: 5),
-                          Text(
-                            description,
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-
-                    SizedBox(height: 20,),
-                          StreamBuilder(stream: time(),
-                              builder: (context,snapshot){
-
-                            if(!snapshot.hasData)
-                              {
-                                return Text("time : ${snapshot.data}");
-                              }
-                            
-                            final time = snapshot.data!;
-                            
-                            return Text('${time.hour}:${time.minute}:${time.second}');
-                            
-                            
-
-                          }),
-                          SizedBox(height: 20,),
-
-
-
-
-                        ],
-                      );
-                    }
-
-                    return const Text('No data');
-                  },
-                ),
-
-              ),
-            ),
-
-            SizedBox(height: height * 0.03),
 
             /// ================= NEW HEADER =================
             Padding(
@@ -236,23 +157,7 @@ class _homeState extends State<home> {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  ElevatedButton(
 
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const api2()),
-                      );
-
-                    },
-                    child: Text(
-                      "API 2",
-                      style: TextStyle(
-                        fontSize: width * 0.04,
-                        color: Colors.grey[850],
-                      ),
-                    ),
-                  ),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -261,8 +166,12 @@ class _homeState extends State<home> {
                       );
 
                     },
+                    style: ButtonStyle(
+                      elevation: WidgetStatePropertyAll(0),
+                      backgroundColor: WidgetStatePropertyAll(Colors.grey[100])
+                    ),
                     child: Text(
-                      "API",
+                      "View all",
                       style: TextStyle(
                         fontSize: width * 0.04,
                         color: Colors.grey[850],
@@ -273,46 +182,130 @@ class _homeState extends State<home> {
               ),
             ),
 
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-              child: Text(
-                "You’ve never seen it before!",
-                style: TextStyle(
-                  fontSize: width * 0.04,
-                  color: Colors.grey[600],
-                  letterSpacing: 1,
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                  child: Text(
+                    "You’ve never seen it before!",
+                    style: TextStyle(
+                      fontSize: width * 0.04,
+                      color: Colors.grey[600],
+                      letterSpacing: 1,
+                    ),
+                  ),
                 ),
-              ),
+
+                SizedBox(width: width/4.6,),
+
+                ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(Colors.white),
+                    elevation: WidgetStatePropertyAll(0),
+                  ),
+
+                  onPressed: () {
+                    setState(() {
+                      productsFuture = ApiService.fetchProducts();
+                    });
+                  },
+                  child:  Icon(Icons.refresh,
+                  color: Colors.red,
+                  size: 30,)
+                ),
+
+
+              ],
             ),
 
             SizedBox(height: height * 0.02),
 
-            /// ================= PRODUCT LIST =================
-            SizedBox(
-              height: width * 0.9,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return Padding(
-                    padding: EdgeInsets.only(left: width * 0.04),
-                    child: ProductCard(
-                      name: product['name'],
-                      brand: product['brand'],
-                      image: product['image'],
-                      price: product['price'],
-                      tag: product['tag'],
-                      offer: product['offer'],
-                      rating: product['rating'],
+            FutureBuilder(future: productsFuture,
+                builder: (context,snapshot){
+                  if (snapshot.connectionState== ConnectionState.waiting)
+                    {
+                      return Center(child: CircularProgressIndicator(color: Colors.red,),);
+                    }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.wifi_off,
+                              size: 60,
+                              color: Colors.grey,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              snapshot.error.toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(Colors.grey)
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  productsFuture = ApiService.fetchProducts();
+                                });
+                              },
+                              child: const Text('Retry',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20
+                              ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  final prod = snapshot.data ?? [];
+
+                  if (prod.isEmpty)
+                    {
+                      return Center(
+                        child: Text('No product found'),
+                      );
+                    }
+
+                  return  SizedBox(
+                    height: width * 0.9,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: prod.length,
+                      itemBuilder: (context, index) {
+                        final p = prod[index];
+                        return Padding(
+                          padding: EdgeInsets.only(left: width * 0.04),
+                          child: ProductCard(
+                            name: p.name,
+                            brand: p.brand,
+                            image: p.images.isNotEmpty ? p.images.first : '',
+                            price: p.price.toString(),
+                            tag: 'NEW',
+                            offer: p.offer,
+                            rating: p.rating.toString(),
+                          ),
+                        );
+                      },
                     ),
                   );
-                },
-              ),
-            ),
 
 
-            /// ================= VIEW ALL BUTTON =================
+
+                }),
+
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -337,6 +330,108 @@ class _homeState extends State<home> {
 
 
             SizedBox(height: height * 0.05),
+
+            Center(
+              child: ElevatedButton(
+
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const api2()),
+                  );
+
+                },
+                style: ButtonStyle(
+                    elevation: WidgetStatePropertyAll(0),
+                    backgroundColor: WidgetStatePropertyAll(Colors.grey[100])
+                ),
+                child: Text(
+
+                  "API 2",
+                  style: TextStyle(
+                    fontSize: width * 0.04,
+                    color: Colors.grey[850],
+                  ),
+                ),
+              ),
+            ),
+
+            Center(
+              child: SizedBox(
+                height: height/6,
+                child: FutureBuilder(future: getweather('chennai'),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    if (snapshot.hasData) {
+                      final data = snapshot.data!;
+                      final city = data['name'];
+                      final temp = data['main']['temp'];
+                      final description = data['weather'][0]['description'];
+
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+
+                          Text(
+                            city,
+                            style:  TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '$temp \' C',
+                            style: TextStyle(fontSize: 22),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            description,
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+
+                          SizedBox(height: 20,),
+                          StreamBuilder(stream: time(),
+                              builder: (context,snapshot){
+
+                                if(!snapshot.hasData)
+                                {
+                                  return Text("time : ${snapshot.data}");
+                                }
+
+                                final time = snapshot.data!;
+
+                                return Text('${time.hour}:${time.minute}:${time.second}');
+
+
+
+                              }),
+                          SizedBox(height: 20,),
+
+
+
+
+                        ],
+                      );
+                    }
+
+                    return const Text('No data');
+                  },
+                ),
+
+              ),
+            ),
+
+            SizedBox(height: height * 0.05),
+
+
           ],
         ),
       ),

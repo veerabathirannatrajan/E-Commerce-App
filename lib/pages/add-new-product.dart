@@ -23,7 +23,10 @@ class _AddProductPageState extends State<AddProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Product')),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+          backgroundColor: Colors.white,
+      title: const Text('Add Product')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -38,10 +41,20 @@ class _AddProductPageState extends State<AddProductPage> {
             const SizedBox(height: 20),
 
             ElevatedButton(
+              style: ButtonStyle(
+
+                backgroundColor: MaterialStatePropertyAll(Colors.red),
+                fixedSize: WidgetStatePropertyAll(Size(300,70)),
+
+              ),
               onPressed: loading ? null : _submit,
               child: loading
                   ? const CircularProgressIndicator()
-                  : const Text('ADD PRODUCT'),
+                  : const Text('ADD PRODUCT',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20
+              ),),
             ),
 
             const SizedBox(height: 16),

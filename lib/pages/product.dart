@@ -44,6 +44,19 @@ class _productState extends State<product> {
   late int len = products.length;
   Color favcolor = Colors.grey;
 
+  ImageProvider imgurl(String imageUrl) {
+    if (imageUrl.isEmpty) {
+      return const AssetImage('assets/images/loading.png');
+    }
+
+    if (imageUrl.startsWith('http')) {
+      return NetworkImage(imageUrl);
+    }
+
+    return AssetImage('assets/images/$imageUrl');
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -94,7 +107,7 @@ class _productState extends State<product> {
                     width: width * 0.91,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/images/${widget.image}'),
+                        image: imgurl(widget.image),
                         fit: BoxFit.cover,
                       ),
                       borderRadius: BorderRadius.circular(20),
