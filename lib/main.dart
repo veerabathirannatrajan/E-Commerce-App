@@ -1,3 +1,4 @@
+import 'package:e_com/pages/api_test.dart';
 import 'package:e_com/pages/categories.dart';
 import 'package:e_com/pages/check.dart';
 import 'package:e_com/pages/main.dart';
@@ -25,7 +26,6 @@ void main() {
       '/main2' : (context)=>main2(),
       '/check' : (context)=>check(),
       '/categories' : (context)=>categories(),
-
 
     },
   ));

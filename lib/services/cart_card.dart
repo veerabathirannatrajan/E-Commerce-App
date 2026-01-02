@@ -58,14 +58,23 @@ class _cartcardState extends State<cartcard> {
               children: [
                 // IMAGE
                 Container(
+                  height: h/5,
                   width: w * 0.35,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.horizontal(
-                      left: Radius.circular(w * 0.04),
+                      left: Radius.circular(10),
                     ),
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/${widget.image}'),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.horizontal(
+                      left: Radius.circular(10),
+                    ),
+                    child: FadeInImage(
                       fit: BoxFit.cover,
+                      placeholder: const AssetImage('assets/images/placeholder.png'),
+                      image: widget.image.startsWith('http')
+                          ? NetworkImage(widget.image)
+                          : AssetImage('assets/images/${widget.image}') as ImageProvider,
                     ),
                   ),
                 ),

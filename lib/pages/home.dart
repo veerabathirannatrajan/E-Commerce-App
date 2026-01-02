@@ -1,3 +1,6 @@
+import 'package:dio/dio.dart';
+import 'package:e_com/pages/api_test.dart';
+import 'package:e_com/services/dio-service-2.dart';
 import 'package:e_com/services/product_card.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +37,37 @@ class _homeState extends State<home> {
     {'brand':'Step Up','name':'Elegant High Heel Shoes','price':'74','tag':'NEW','image':'shoes.png','offer':'20%','rating':'5'},
   ];
 
-  @override
+   Future<Map<String, dynamic>>getweather(String city) async{
+     final dio =  Dio();
+     try{
+       final response = await dio.get(
+           'https://api.openweathermap.org/data/2.5/weather',
+           queryParameters: {
+             'q': city,
+             'appid': '92fff7865fd10c6368cc594957422c2d',
+             // replace with your key
+             'units': 'metric',
+           });
+       return response.data;
+     }
+     catch (e)
+     {
+       throw Exception('error : $e');
+     }
+   }
+
+
+   Stream<DateTime> time() async* {
+      while(true)
+      {
+        await Future.delayed(Duration(seconds: 1));
+        yield DateTime.now();
+      }
+   }
+
+
+
+   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final width = size.width;
@@ -46,8 +79,6 @@ class _homeState extends State<home> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            /// ================= HERO BANNER =================
             Stack(
               children: [
                 Container(
@@ -116,6 +147,79 @@ class _homeState extends State<home> {
                 ),
               ],
             ),
+            SizedBox(height: height * 0.03),
+            Center(
+              child: SizedBox(
+                height: height/6,
+                child: FutureBuilder(future: getweather('chennai'),
+                  builder: (context, snapshot) {
+                   if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    if (snapshot.hasData) {
+                      final data = snapshot.data!;
+                      final city = data['name'];
+                      final temp = data['main']['temp'];
+                      final description = data['weather'][0]['description'];
+
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+
+                          Text(
+                            city,
+                            style:  TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                           SizedBox(height: 10),
+                          Text(
+                            '$temp \' C',
+                            style: TextStyle(fontSize: 22),
+                          ),
+                           SizedBox(height: 5),
+                          Text(
+                            description,
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+
+                    SizedBox(height: 20,),
+                          StreamBuilder(stream: time(),
+                              builder: (context,snapshot){
+
+                            if(!snapshot.hasData)
+                              {
+                                return Text("time : ${snapshot.data}");
+                              }
+                            
+                            final time = snapshot.data!;
+                            
+                            return Text('${time.hour}:${time.minute}:${time.second}');
+                            
+                            
+
+                          }),
+                          SizedBox(height: 20,),
+
+
+
+
+                        ],
+                      );
+                    }
+
+                    return const Text('No data');
+                  },
+                ),
+
+              ),
+            ),
 
             SizedBox(height: height * 0.03),
 
@@ -132,10 +236,33 @@ class _homeState extends State<home> {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {},
+                  ElevatedButton(
+
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const api2()),
+                      );
+
+                    },
                     child: Text(
-                      "View all",
+                      "API 2",
+                      style: TextStyle(
+                        fontSize: width * 0.04,
+                        color: Colors.grey[850],
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const ApiTest()),
+                      );
+
+                    },
+                    child: Text(
+                      "API",
                       style: TextStyle(
                         fontSize: width * 0.04,
                         color: Colors.grey[850],
@@ -206,6 +333,8 @@ class _homeState extends State<home> {
                 ),
               ),
             ),
+
+
 
             SizedBox(height: height * 0.05),
           ],

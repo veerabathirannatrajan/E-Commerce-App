@@ -1,3 +1,5 @@
+import 'package:e_com/pages/add-new-product.dart';
+import 'package:e_com/pages/product_history_page.dart';
 import 'package:flutter/material.dart';
 
 class profile extends StatefulWidget {
@@ -97,8 +99,6 @@ class _profileState extends State<profile> {
                 ],
               ),
               SizedBox(height: height * 0.04),
-
-              // Logout button
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll(Colors.red),
@@ -123,6 +123,54 @@ class _profileState extends State<profile> {
                 ),
               ),
               SizedBox(height: height * 0.04),
+
+
+              // Logout button
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(Colors.redAccent),
+                  padding: WidgetStatePropertyAll(EdgeInsets.all(20))
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AddProductPage()),
+                  );
+                },
+                child: Text(
+                  "Add your own product",
+                  style: TextStyle(
+                    letterSpacing: 1,
+                    fontSize: width * 0.05,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: height * 0.04),
+
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.redAccent),
+                    padding: WidgetStatePropertyAll(EdgeInsets.all(20))
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ProductHistoryPage()),
+                  );
+                },
+                child: Text(
+                  "Manage products",
+                  style: TextStyle(
+                    letterSpacing: 1,
+                    fontSize: width * 0.05,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: height * 0.04),
+
+
 
               // Options List
               ListView.separated(
