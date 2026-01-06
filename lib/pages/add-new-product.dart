@@ -26,7 +26,7 @@ class _AddProductPageState extends State<AddProductPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
           backgroundColor: Colors.white,
-      title: const Text('Add Product')),
+          title: const Text('Add Product')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -51,10 +51,10 @@ class _AddProductPageState extends State<AddProductPage> {
               child: loading
                   ? const CircularProgressIndicator()
                   : const Text('ADD PRODUCT',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20
-              ),),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20
+                ),),
             ),
 
             const SizedBox(height: 16),

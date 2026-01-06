@@ -1,4 +1,6 @@
+import 'package:e_com/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class sign_up extends StatefulWidget {
   const sign_up({super.key});
@@ -13,8 +15,37 @@ class _sign_upState extends State<sign_up> {
   String? password;
   String? name;
   String? email;
+  String? dob; // Date of Birth (stored as String)
+  DateTime? selectedDob;
+  String? selectedGender;
+
+  final List<String> genderList = [
+    "Male",
+    "Female",
+    "Other",
+  ];
 
   bool isEmailValid = false;
+
+
+  Future<void> _pickDateOfBirth() async {
+    DateTime now = DateTime.now();
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(now.year - 18), // default 18 years old
+      firstDate: DateTime(1950),
+      lastDate: now,
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedDob = picked;
+        dob = DateFormat('dd-MM-yyyy').format(picked); // ✅ STRING
+      });
+    }
+  }
+
 
   bool checkEmail(String value) {
     return RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
@@ -33,21 +64,37 @@ class _sign_upState extends State<sign_up> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        toolbarHeight: height / 10,
+        toolbarHeight: height / 8,
         elevation: 0,
         automaticallyImplyLeading: false,
         titleSpacing: 0,
-        title: Padding(
-          padding: EdgeInsets.all(width * 0.03),
-          child: Text(
-            'Sign up',
-            style: TextStyle(
-              fontSize: width * 0.12,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 2,
-              color: Colors.black,
+        title: Column(
+          // mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              icon: Icon(
+                Icons.arrow_back_ios_new,
+                color: Colors.black,
+                size: width * 0.06,
+              ),
+              onPressed: () => Navigator.pop(context),
             ),
-          ),
+            Padding(
+              padding: EdgeInsets.all(width * 0.03),
+              child: Text(
+                'Sign up',
+                style: TextStyle(
+                  fontSize: width * 0.12,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: SingleChildScrollView(
@@ -212,6 +259,96 @@ class _sign_upState extends State<sign_up> {
 
                 SizedBox(height: height / 80),
 
+                // DATE OF BIRTH
+                Container(
+                  width: width * 0.9,
+                  height: height / 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[100],
+                  ),
+                  child: InkWell(
+                    onTap: _pickDateOfBirth,
+                    child: IgnorePointer(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          hintText: "Date of Birth",
+                          hintStyle: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: width * 0.045,
+                          ),
+                          prefixIcon: Icon(Icons.calendar_today, size: width * 0.06),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: width * 0.04,
+                            vertical: height * 0.018,
+                          ),
+                        ),
+                        controller: TextEditingController(text: dob ?? ""),
+                        validator: (value) {
+                          if (dob == null) {
+                            return "Date of birth is required";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: height / 80),
+                // GENDER DROPDOWN
+                Container(
+                  width: width * 0.9,
+                  height: height / 14,
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100], // ✅ white background
+                    borderRadius: BorderRadius.circular(10), // ✅ rounded edge
+                    border: Border.all(color: Colors.grey.shade100),
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    dropdownColor: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    value: selectedGender,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                    icon: Icon(Icons.arrow_drop_down, size: width * 0.07),
+                    hint: Text(
+                      "Gender",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: width * 0.045,
+                      ),
+                    ),
+                    items: genderList.map((gender) {
+                      return DropdownMenuItem<String>(
+                        value: gender,
+                        child: Text(
+                          gender,
+                          style: TextStyle(fontSize: width * 0.045),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedGender = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return "Please select your gender";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+
+
+
+
+                SizedBox(height: height / 80),
+
                 // ALREADY HAVE ACCOUNT
                 InkWell(
                   onTap: () {
@@ -255,11 +392,36 @@ class _sign_upState extends State<sign_up> {
                       ),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacementNamed(context, '/main');
+                      try {
+                        await AuthService().signUp(
+                          name: name!,
+                          email: email!,
+                          password: password!,
+                          dob: dob!,
+                          gender: selectedGender!,
+
+                        );
+
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Account created successfully")),
+                        );
+
+                        // Go to main screen
+                        Navigator.pushReplacementNamed(context, '/main');
+
+                      } catch (e) {
+                        // Clean error message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
+                        );
+                      }
                     }
                   },
+
+
                   child: Text(
                     "SIGN UP",
                     style: TextStyle(

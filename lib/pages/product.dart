@@ -80,8 +80,8 @@ class _productState extends State<product> {
             ),
             IconButton(onPressed: (){},
                 icon: Icon(Icons.share,
-                size: 30,)),
-            
+                  size: 30,)),
+
           ],
         ),
         leading: Padding(
@@ -333,7 +333,7 @@ class _productState extends State<product> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("Shipping info", style: TextStyle(fontSize: width * 0.06,
-                      color: Colors.black)),
+                          color: Colors.black)),
                       Icon(Icons.arrow_forward_ios)
                     ],
                   ),
@@ -352,7 +352,7 @@ class _productState extends State<product> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("Support", style: TextStyle(fontSize: width * 0.06,
-                      color: Colors.black)),
+                          color: Colors.black)),
                       Icon(Icons.arrow_forward_ios)
                     ],
                   ),

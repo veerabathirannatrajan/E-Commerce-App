@@ -182,7 +182,7 @@ class _main2State extends State<main2> {
                               child: const Text('Retry',
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 20
+                                    fontSize: 15
                                 ),
                               ),
                             ),
@@ -307,7 +307,7 @@ class _main2State extends State<main2> {
                               child: const Text('Retry',
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 20
+                                    fontSize: 15
                                 ),
                               ),
                             ),

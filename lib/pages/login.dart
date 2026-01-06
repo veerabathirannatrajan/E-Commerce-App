@@ -1,3 +1,5 @@
+import 'package:e_com/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class login extends StatefulWidget {
@@ -39,30 +41,14 @@ class _loginState extends State<login> {
         titleSpacing: 0,
         title: Padding(
           padding: EdgeInsets.only(left: width * 0.04, top: height * 0.01),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                icon: Icon(
-                  Icons.arrow_back_ios_new,
-                  color: Colors.black,
-                  size: width * 0.06,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-              SizedBox(height: height * 0.01),
-              Text(
-                'Login',
-                style: TextStyle(
-                  fontSize: width * 0.12,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 2,
-                  color: Colors.black,
-                ),
-              ),
-            ],
+          child: Text(
+            'Login',
+            style: TextStyle(
+              fontSize: width * 0.12,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 2,
+              color: Colors.black,
+            ),
           ),
         ),
       ),
@@ -214,6 +200,34 @@ class _loginState extends State<login> {
                   ),
                 ),
 
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/sign_up');
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Create an account account ?",
+                        style: TextStyle(
+                          letterSpacing: 1,
+                          fontWeight: FontWeight.bold,
+                          fontSize: width * 0.037,
+                        ),
+                      ),
+                      SizedBox(width: width / 50),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context,'/sign_up');
+                        },
+                        icon: Icon(Icons.arrow_forward,
+                            color: Colors.red, size: width * 0.06),
+                      ),
+                      SizedBox(width: width / 50),
+                    ],
+                  ),
+                ),
+
                 SizedBox(height: height / 25),
 
                 // SIGN IN BUTTON
@@ -228,11 +242,40 @@ class _loginState extends State<login> {
                       ),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacementNamed(context, '/main');
+                      try {
+                        final user = await AuthService().login(
+                          email: email!,
+                          password: password!,
+                        );
+
+                        if (user != null) {
+                          // ✅ USER EXISTS → NAVIGATE
+                          Navigator.pushReplacementNamed(context, '/main');
+                        }
+                      } on FirebaseAuthException catch (e) {
+                        String message = "Login failed";
+
+                        if (e.code == 'user-not-found') {
+                          message = "No user found for this email";
+                        } else if (e.code == 'wrong-password') {
+                          message = "Incorrect password";
+                        } else if (e.code == 'invalid-email') {
+                          message = "Invalid email address";
+                        }
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(message)),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Something went wrong")),
+                        );
+                      }
                     }
                   },
+
                   child: Text(
                     "LOGIN",
                     style: TextStyle(

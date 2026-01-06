@@ -1,6 +1,14 @@
-import 'package:e_com/pages/add-new-product.dart';
-import 'package:e_com/pages/product_history_page.dart';
+import 'dart:io';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:e_com/services/auth_service.dart';
+import 'package:e_com/pages/add-new-product.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_com/pages/product_history_page.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 
 class profile extends StatefulWidget {
   const profile({super.key});
@@ -10,6 +18,213 @@ class profile extends StatefulWidget {
 }
 
 class _profileState extends State<profile> {
+
+  Map<String, dynamic>? userData;
+  bool isLoading = true;
+  int? age;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (doc.exists) {
+      final data = doc.data()!;
+
+      setState(() {
+        userData = data;
+        profileImageUrl = data['profileImage'];
+        age = _calculateAge(data['dob']); // ✅ FIXED
+        isLoading = false;
+      });
+    }
+  }
+  void _showImagePicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo),
+              title: const Text("Gallery"),
+              onTap: () {
+                Navigator.pop(context);
+                _pickAndUpload(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text("Camera"),
+              onTap: () {
+                Navigator.pop(context);
+                _pickAndUpload(ImageSource.camera);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String? profileImageUrl;
+  bool isUploading = false;
+
+  Future<void> _pickAndUpload(ImageSource source) async {
+    final picker = ImagePicker();
+
+    final XFile? image = await picker.pickImage(
+      source: source,
+      imageQuality: 70,
+      maxWidth: 1024,
+    );
+
+    if (image == null) return;
+
+    setState(() => isUploading = true);
+
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final file = File(image.path);
+
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('profile_images')
+        .child('${userData!['uid']}')
+        .child('${userData!['name']}.jpg');
+
+    await ref.putFile(file);
+
+    final url = await ref.getDownloadURL();
+
+    // 🔥 Save URL in Firestore
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set({
+      'profileImage': url,
+    }, SetOptions(merge: true));
+
+    setState(() {
+      profileImageUrl = url;
+      isUploading = false;
+    });
+  }
+
+  Future<void> loadProfileImage() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .get();
+
+    if (doc.exists && doc.data()!.containsKey('profileImage')) {
+      setState(() {
+        profileImageUrl = doc['profileImage'];
+      });
+    }
+  }
+
+
+
+
+  int _calculateAge(String dob) {
+    DateTime birthDate = DateFormat('dd-MM-yyyy').parse(dob);
+    DateTime today = DateTime.now();
+
+    int age = today.year - birthDate.year;
+
+    if (today.month < birthDate.month ||
+        (today.month == birthDate.month && today.day < birthDate.day)) {
+      age--;
+    }
+
+    return age;
+  }
+
+
+
+  Widget _userInfo(double width, double height) {
+    if (isLoading) {
+      return const CircularProgressIndicator();
+    }
+
+    if (userData == null) {
+      return const Text("User data not found");
+    }
+
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 55,
+          backgroundColor: Colors.grey[300],
+          backgroundImage: profileImageUrl != null
+              ? NetworkImage(profileImageUrl!)
+              : AssetImage('assets/images/profile.png') as ImageProvider,
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: IconButton(
+              icon: const Icon(Icons.camera_alt, color: Colors.black),
+              onPressed: () => _showImagePicker(),
+            ),
+          ),
+        ),
+
+        SizedBox(width: width * 0.05),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              userData!['name'],
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: width * 0.06,
+              ),
+            ),
+            Text(
+              userData!['email'],
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: width * 0.045,
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  "Age: $age",
+                  style: TextStyle(
+                    fontSize: width * 0.04,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(width: width * 0.05),
+                Text(
+                  "Gender: ${userData!['gender']}",
+                  style: TextStyle(
+                    fontSize: width * 0.04,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -60,56 +275,27 @@ class _profileState extends State<profile> {
           child: Column(
             children: [
 
-              // User info
-              Row(
-                children: [
-                  Container(
-                    height: height * 0.12,
-                    width: height * 0.12,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/black.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: width * 0.05),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Matilda Brown",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w800,
-                          fontSize: width * 0.06,
-                        ),
-                      ),
-                      Text(
-                        "matildabrown@mail.com",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w400,
-                          fontSize: width * 0.045,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              _userInfo(width, height),
+
+
+
               SizedBox(height: height * 0.04),
               ElevatedButton(
                 style: ButtonStyle(
 
                   backgroundColor: MaterialStatePropertyAll(Colors.red),
-                    fixedSize: WidgetStatePropertyAll(Size(400,70)),
+                  fixedSize: WidgetStatePropertyAll(Size(400,70)),
 
                 ),
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true)
-                      .pushNamedAndRemoveUntil('/sign_up', (route) => false);
+                onPressed: () async {
+                  await AuthService().logout();
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/login',
+                        (route) => false,
+                  );
                 },
+
                 child: Text(
                   "LOG OUT",
                   style: TextStyle(
@@ -148,7 +334,7 @@ class _profileState extends State<profile> {
               ElevatedButton(
                 style: ButtonStyle(
                   fixedSize: WidgetStatePropertyAll(Size(400,70)),
-                    backgroundColor: WidgetStatePropertyAll(Colors.red),
+                  backgroundColor: WidgetStatePropertyAll(Colors.red),
                 ),
                 onPressed: () {
                   Navigator.push(

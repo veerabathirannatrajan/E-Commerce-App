@@ -37,7 +37,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         },
             icon: Icon(Icons.arrow_back_ios)),
       ),
-      
+
 
       body: SingleChildScrollView(
         child: Padding(
@@ -156,8 +156,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       elevation: 3,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20)
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)
                         ),
                         child: SizedBox(
                           height: screenHeight * 0.1,
@@ -264,10 +264,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
         height: screenHeight * 0.13,
         width: screenWidth * 0.3,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          image: DecorationImage(image: AssetImage(imagePath,),
-          fit:BoxFit.cover)
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            image: DecorationImage(image: AssetImage(imagePath,),
+                fit:BoxFit.cover)
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -280,12 +280,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
               color: Colors.white,
               child: Center(
                 child: Text('2-3 days',style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 22
+                    color: Colors.grey,
+                    fontSize: 22
                 ),),
               ),
             )
-             // Image.asset(imagePath, height: screenHeight * 0.07, fit: BoxFit.contain),
+            // Image.asset(imagePath, height: screenHeight * 0.07, fit: BoxFit.contain),
 
           ],
         ),

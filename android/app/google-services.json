@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1045958252600",
+    "project_id": "e-commerce-app-fb5a2",
+    "storage_bucket": "e-commerce-app-fb5a2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045958252600:android:4975e6385e4c9bc5012ecd",
+        "android_client_info": {
+          "package_name": "com.veera.carto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-xdHNQoGlQ657Ycs0ciGo4hpLr0I-7Mk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -28,7 +28,7 @@ class _ProductHistoryPageState extends State<ProductHistoryPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+          backgroundColor: Colors.white,
           title: const Text('My Products')),
       body: FutureBuilder<List<Product>>(
         future: productsFuture,

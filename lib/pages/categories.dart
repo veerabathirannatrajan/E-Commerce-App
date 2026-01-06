@@ -88,9 +88,9 @@ class _categoriesState extends State<categories> {
                 SizedBox(height: h * 0.02),
                 ...menCategories.map(
                       (product) => catCard(
-                        name: product['name']!,
-                        image: product['image']!,
-                      ),
+                    name: product['name']!,
+                    image: product['image']!,
+                  ),
                 ),
               ],
             ),
@@ -104,9 +104,9 @@ class _categoriesState extends State<categories> {
                 SizedBox(height: h * 0.02),
                 ...womenCategories.map(
                       (product) => catCard(
-                        name: product['name']!,
-                        image: product['image']!,
-                      ),
+                    name: product['name']!,
+                    image: product['image']!,
+                  ),
                 ),
               ],
             ),
@@ -120,9 +120,9 @@ class _categoriesState extends State<categories> {
                 SizedBox(height: h * 0.02),
                 ...kidsCategories.map(
                       (product) => catCard(
-                        name: product['name']!,
-                        image: product['image']!,
-                      ),
+                    name: product['name']!,
+                    image: product['image']!,
+                  ),
                 ),
               ],
             ),

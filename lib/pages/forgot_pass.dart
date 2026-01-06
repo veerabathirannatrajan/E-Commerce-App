@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../services/auth_service.dart';
+
 class forgot_pass extends StatefulWidget {
   const forgot_pass({super.key});
 
@@ -147,14 +149,24 @@ class _forgot_passState extends State<forgot_pass> {
                       ),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // TODO: Send reset password email
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Password reset link sent!")),
-                      );
+                      try {
+                        await AuthService().resetPassword(email!);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Reset link sent to your email")),
+                        );
+
+                        Navigator.pop(context);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(e.toString())),
+                        );
+                      }
                     }
                   },
+
                   child: Text(
                     "SEND",
                     style: TextStyle(

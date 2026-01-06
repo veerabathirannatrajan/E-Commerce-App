@@ -35,7 +35,7 @@ class _EditProductPageState extends State<EditProductPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+          backgroundColor: Colors.white,
           title: const Text('Edit Product')),
       body: Padding(
         padding: const EdgeInsets.all(16),

@@ -104,15 +104,15 @@ class ProductCard_api extends StatelessWidget {
                       bottom: 4,
                       right: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.grey[500],
-                        ),
-                        child: Icon(Icons.favorite_outline)
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.grey[500],
+                          ),
+                          child: Icon(Icons.favorite_outline)
                       ),
                     ),
                   ],

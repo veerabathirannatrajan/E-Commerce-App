@@ -68,12 +68,20 @@ class _ApiTestState extends State<ApiTest> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.grey)
+                      ),
                       onPressed: () {
                         setState(() {
                           productsFuture = ApiService.fetchProducts();
                         });
                       },
-                      child: const Text('Retry'),
+                      child: const Text('Retry',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -102,7 +110,7 @@ class _ApiTestState extends State<ApiTest> {
                   height: height * 0.35,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/images/hero.png'),
+                      image: AssetImage('assets/images/home1.png'),
                       fit: BoxFit.cover,
                     ),
                   ),

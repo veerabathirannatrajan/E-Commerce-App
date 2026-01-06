@@ -32,37 +32,37 @@ class _homeState extends State<home> {
 
 
 
-   Future<Map<String, dynamic>>getweather(String city) async{
-     final dio =  Dio();
-     try{
-       final response = await dio.get(
-           'https://api.openweathermap.org/data/2.5/weather',
-           queryParameters: {
-             'q': city,
-             'appid': '92fff7865fd10c6368cc594957422c2d',
-             // replace with your key
-             'units': 'metric',
-           });
-       return response.data;
-     }
-     catch (e)
-     {
-       throw Exception('error : $e');
-     }
-   }
+  Future<Map<String, dynamic>>getweather(String city) async{
+    final dio =  Dio();
+    try{
+      final response = await dio.get(
+          'https://api.openweathermap.org/data/2.5/weather',
+          queryParameters: {
+            'q': city,
+            'appid': '92fff7865fd10c6368cc594957422c2d',
+            // replace with your key
+            'units': 'metric',
+          });
+      return response.data;
+    }
+    catch (e)
+    {
+      throw Exception('error : $e');
+    }
+  }
 
 
-   Stream<DateTime> time() async* {
-      while(true)
-      {
-        await Future.delayed(Duration(seconds: 1));
-        yield DateTime.now();
-      }
-   }
+  Stream<DateTime> time() async* {
+    while(true)
+    {
+      await Future.delayed(Duration(seconds: 1));
+      yield DateTime.now();
+    }
+  }
 
 
 
-   @override
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final width = size.width;
@@ -167,8 +167,8 @@ class _homeState extends State<home> {
 
                     },
                     style: ButtonStyle(
-                      elevation: WidgetStatePropertyAll(0),
-                      backgroundColor: WidgetStatePropertyAll(Colors.grey[100])
+                        elevation: WidgetStatePropertyAll(0),
+                        backgroundColor: WidgetStatePropertyAll(Colors.grey[100])
                     ),
                     child: Text(
                       "View all",
@@ -199,19 +199,19 @@ class _homeState extends State<home> {
                 SizedBox(width: width/4.6,),
 
                 ElevatedButton(
-                  style: ButtonStyle(
+                    style: ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Colors.white),
-                    elevation: WidgetStatePropertyAll(0),
-                  ),
+                      elevation: WidgetStatePropertyAll(0),
+                    ),
 
-                  onPressed: () {
-                    setState(() {
-                      productsFuture = ApiService.fetchProducts();
-                    });
-                  },
-                  child:  Icon(Icons.refresh,
-                  color: Colors.red,
-                  size: 30,)
+                    onPressed: () {
+                      setState(() {
+                        productsFuture = ApiService.fetchProducts();
+                      });
+                    },
+                    child:  Icon(Icons.refresh,
+                      color: Colors.red,
+                      size: 30,)
                 ),
 
 
@@ -223,9 +223,9 @@ class _homeState extends State<home> {
             FutureBuilder(future: productsFuture,
                 builder: (context,snapshot){
                   if (snapshot.connectionState== ConnectionState.waiting)
-                    {
-                      return Center(child: CircularProgressIndicator(color: Colors.red,),);
-                    }
+                  {
+                    return Center(child: CircularProgressIndicator(color: Colors.red,),);
+                  }
                   if (snapshot.hasError) {
                     return Center(
                       child: Padding(
@@ -250,7 +250,7 @@ class _homeState extends State<home> {
                             const SizedBox(height: 20),
                             ElevatedButton(
                               style: ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll(Colors.grey)
+                                  backgroundColor: WidgetStatePropertyAll(Colors.grey)
                               ),
                               onPressed: () {
                                 setState(() {
@@ -258,10 +258,10 @@ class _homeState extends State<home> {
                                 });
                               },
                               child: const Text('Retry',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20
-                              ),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15
+                                ),
                               ),
                             ),
                           ],
@@ -273,11 +273,11 @@ class _homeState extends State<home> {
                   final prod = snapshot.data ?? [];
 
                   if (prod.isEmpty)
-                    {
-                      return Center(
-                        child: Text('No product found'),
-                      );
-                    }
+                  {
+                    return Center(
+                      child: Text('No product found'),
+                    );
+                  }
 
                   return  SizedBox(
                     height: width * 0.9,
