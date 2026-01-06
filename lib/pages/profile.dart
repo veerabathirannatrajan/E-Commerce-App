@@ -170,7 +170,7 @@ class _profileState extends State<profile> {
           backgroundColor: Colors.grey[300],
           backgroundImage: profileImageUrl != null
               ? NetworkImage(profileImageUrl!)
-              : AssetImage('assets/images/profile.png') as ImageProvider,
+              : AssetImage('assets/images/loading.png') as ImageProvider,
           child: Align(
             alignment: Alignment.bottomRight,
             child: IconButton(
